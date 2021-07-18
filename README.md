@@ -3,10 +3,10 @@
 ## Referências
 
 **Publicado em:**
-- .NET: https://app-infnet-social-network.azurewebsites.net/
+- [app-infnet-social-network.azurewebsites.net](https://app-infnet-social-network.azurewebsites.net)
 
 **Steps:**
-1. https://github.com/jcguimaraesnet/projeto-bloco-social-network/blob/master/step-tp6-identity.md
+1. [step-tp6-identity.md](https://github.com/jcguimaraesnet/projeto-bloco-social-network/blob/master/step-tp6-identity.md)
 
 
 ```
