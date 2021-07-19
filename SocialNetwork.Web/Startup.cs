@@ -24,6 +24,7 @@ namespace SocialNetwork.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,13 +45,20 @@ namespace SocialNetwork.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapAreaControllerRoute(
+                    name: "Identity",
+                    areaName: "Identity",
+                    pattern: "Identity/{controller=Dashboard}/{action=Index}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Dashboard}/{action=Index}");
+                endpoints.MapRazorPages();
             });
         }
     }

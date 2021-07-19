@@ -231,7 +231,7 @@
     },
     {
       "controller": "Account",
-      //"action": "Manage",
+      "action": "Manage",
       "area": "Identity",
       "icon": "fa fa-fingerprint",
       "text": "Perfil"
