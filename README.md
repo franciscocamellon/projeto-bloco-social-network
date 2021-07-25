@@ -2,6 +2,16 @@
 
 ## Referências
 
+**Publicado em:**
+- [app-infnet-social-network.azurewebsites.net](https://app-infnet-social-network.azurewebsites.net)
+
+**Steps:**
+1. [step-tp6-identity.md](https://github.com/jcguimaraesnet/projeto-bloco-social-network/blob/master/step-tp6-identity.md)
+
+
+```
+```
+
 **Platform**
 - .NET: https://dotnet.microsoft.com/
 
