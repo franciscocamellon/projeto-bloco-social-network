@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-
+@using SocialNetwork.Domain.Entities
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 <!-- BEGIN #header -->
 <div id="header" class="app-header">
     <!-- BEGIN mobile-toggler -->

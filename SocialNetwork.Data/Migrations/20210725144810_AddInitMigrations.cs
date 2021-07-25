@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace SocialNetwork.Web.Areas.Identity.Data.Migrations
+namespace SocialNetwork.Data.Migrations
 {
-    public partial class AddMigrationInit : Migration
+    public partial class AddInitMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

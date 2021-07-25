@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SocialNetwork.Web.Identity.Data;
+using SocialNetwork.Data;
+using SocialNetwork.Domain;
 
 [assembly: HostingStartup(typeof(SocialNetwork.Web.Areas.Identity.IdentityHostingStartup))]
 namespace SocialNetwork.Web.Areas.Identity
@@ -15,18 +16,18 @@ namespace SocialNetwork.Web.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                services.AddDbContext<IdentityDbContext>(options =>
+                services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("DefaultConnection")));
 
-                services.AddDefaultIdentity<IdentityUser>(options => {
+                services.AddDefaultIdentity<User>(options => {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.Password.RequireDigit = false;
                     options.Password.RequiredLength = 3;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
-                }).AddEntityFrameworkStores<IdentityDbContext>();
+                }).AddEntityFrameworkStores<ApplicationDbContext>();
             });
         }
     }
