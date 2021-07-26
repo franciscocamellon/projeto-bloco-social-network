@@ -1,7 +1,7 @@
 ﻿{
   "sidebarMenu": [
     {
-      "text": "Navigation",
+      "text": "Home",
       "is_header": true
     },
     {
@@ -9,6 +9,33 @@
       "action": "Index",
       "icon": "fa fa-laptop",
       "text": "Dashboard"
+    },
+    {
+      "controller": "MeuFeed",
+      "action": "Index",
+      "icon": "fa fa-list-alt",
+      "text": "Feed"
+    },
+    {
+      "is_divider": true
+    },
+    {
+      "text": "Meus dados",
+      "is_header": true
+    },
+    {
+      "controller": "Account",
+      "action": "Manage",
+      "area": "Identity",
+      "icon": "fa fa-fingerprint",
+      "text": "Segurança"
+    },
+    {
+      "controller": "Profile",
+      "action": "Edit",
+      "area": "",
+      "icon": "fa fa-user-circle",
+      "text": "Perfil"
     },
     {
       "is_divider": true
@@ -215,33 +242,6 @@
           "text": "Settings"
         }
       ]
-    },
-    {
-      "is_divider": true
-    },
-    {
-      "text": "Users",
-      "is_header": true
-    },
-    {
-      "controller": "MeuFeed",
-      "action": "Index",
-      "icon": "fa fa-user-circle",
-      "text": "Meu Feed"
-    },
-    {
-      "controller": "Profile",
-      "action": "Edit",
-      "area": "",
-      "icon": "fa fa-user-circle",
-      "text": "Perfil"
-    },
-    {
-      "controller": "Account",
-      "action": "Manage",
-      "area": "Identity",
-      "icon": "fa fa-fingerprint",
-      "text": "Segurança"
     }
   ]
 }
