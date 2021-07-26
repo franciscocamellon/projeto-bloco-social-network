@@ -230,6 +230,13 @@
       "text": "Meu Feed"
     },
     {
+      "controller": "Profile",
+      "action": "Edit",
+      "area": "",
+      "icon": "fa fa-user-circle",
+      "text": "Perfil"
+    },
+    {
       "controller": "Account",
       "action": "Manage",
       "area": "Identity",
