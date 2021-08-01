@@ -2,7 +2,7 @@
 
 namespace SocialNetwork.Web.Controllers
 {
-    public class MeuFeedController : Controller
+    public class FeedController : Controller
     {
         public IActionResult Index()
         {
