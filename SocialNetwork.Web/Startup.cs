@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocialNetwork.Data;
 using SocialNetwork.Domain.Entities;
+using SocialNetwork.Web.Controllers;
+using System;
 
 namespace SocialNetwork.Web
 {
@@ -36,6 +38,10 @@ namespace SocialNetwork.Web
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddHttpClient("", client => {
+                client.BaseAddress = new Uri(Configuration["BaseUrlApi"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

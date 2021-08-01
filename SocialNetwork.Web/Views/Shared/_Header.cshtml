@@ -4,6 +4,10 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
+@{
+    var customUser = await UserManager.GetUserAsync(User);
+}
+
 <!-- BEGIN #header -->
 <div id="header" class="app-header">
     <!-- BEGIN mobile-toggler -->
@@ -39,7 +43,7 @@
         <div class="menu-item dropdown">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-img online">
-                    <img src="~/img/user/user.jpg" alt="" class="mw-100 mh-100 rounded-circle" />
+                    <img src="@(customUser.UriImageProfile ?? "~/img/user/user.jpg")" alt="" class="mw-100 mh-100 rounded-circle" />
                 </div>
                 <div class="menu-text">@User.Identity.Name</div>
             </a>
