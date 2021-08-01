@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SocialNetwork.Web.Controllers
 {
-    public class MeuFeedController : Controller
+    public class FeedController : Controller
     {
         [Authorize]
         public IActionResult Index()
