@@ -31,6 +31,13 @@
       "text": "Segurança"
     },
     {
+      "controller": "Profile",
+      //"action": "Edit",
+      "area": "",
+      "icon": "fa fa-user-circle",
+      "text": "Perfil"
+    },
+    {
       "is_divider": true
     },
     {
