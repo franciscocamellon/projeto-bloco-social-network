@@ -11,7 +11,7 @@
       "text": "Dashboard"
     },
     {
-      "controller": "MeuFeed",
+      "controller": "Feed",
       "action": "Index",
       "icon": "fa fa-list-alt",
       "text": "Feed"
