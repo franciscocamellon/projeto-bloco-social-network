@@ -1,9 +1,19 @@
 ﻿@model IEnumerable<Post>
+@using Microsoft.AspNetCore.Identity
 @using SocialNetwork.Domain.Entities;
+@using SocialNetwork.Domain.Interfaces.Infrastructure
+
+@inject UserManager<User> UserManager
+@inject IProfileRepository profileRepo
+
 @{
     ViewData["Title"] = "Profile";
     ViewData["AppContentClass"] = "p-0";
+
+    var userIdentity = await UserManager.GetUserAsync(User);
+    var profile = await profileRepo.GetProfileByUserIdAsync(userIdentity?.Id);
 }
+
 
 <!-- BEGIN profile -->
 <div class="profile">
@@ -13,7 +23,7 @@
 
         <div class="profile-header-content">
             <div class="profile-header-img">
-                <img src="/img/user/profile.jpg" alt="" />
+                <img src="@(profile?.UriImageProfile != null ? profile.UriImageProfile : "/img/user/user.jpg")" alt="" />
             </div>
             <ul class="profile-header-tab nav nav-tabs nav-tabs-v2">
                 <li class="nav-item">
@@ -57,7 +67,7 @@
         <div class="profile-sidebar">
             <div class="desktop-sticky-top">
                 <!-- profile info -->
-                <h4>Júlio Guimarães</h4>
+                <h4>@(profile?.FullName != null ? profile?.FullName : "Not Setted")</h4>
                 <div class="font-weight-600 mb-3 text-muted mt-n2">@@jcguimaraes</div>
                 <p>
                     Here are many variations of passages of Lorem Ipsum available, but the majority
@@ -117,7 +127,6 @@
             </div>
         </div>
         <!-- END profile-sidebar -->
-
         <!-- BEGIN profile-content -->
         <div class="profile-content">
             <div class="row">
@@ -157,9 +166,9 @@
                                     <div class="card-body">
                                         <!-- post header -->
                                         <div class="d-flex align-items-center mb-3">
-                                            <a href="#" class="text-decoration-none"><img src="/img/user/profile.jpg" alt="" width="50" class="rounded-circle" /></a>
+                                            <a href="#" class="text-decoration-none"><img src="@(post.Profile?.UriImageProfile != null ? post.Profile?.UriImageProfile : "/img/user/user.jpg")" alt="" width="50" class="rounded-circle" /></a>
                                             <div class="flex-fill ps-2">
-                                                <div class="font-weight-600"><a href="#" class="text-decoration-none">Júlio Guimarães</a> at <a href="#" class="text-decoration-none">Rio de Janeiro</a></div>
+                                                <div class="font-weight-600"><a href="#" class="text-decoration-none">@(post.Profile?.FullName != null ? post.Profile.FullName : "not setting")</a> at <a href="#" class="text-decoration-none">Rio de Janeiro</a></div>
                                                 <div class="text-gray-600 fs-13px">@post.Date.ToLongDateString() as @post.Date.ToShortTimeString()</div>
                                             </div>
                                         </div>
@@ -206,70 +215,13 @@
                                 </div>
                             }
 
-                            <!-- FIRST POSTS: PLAIN TEXT -->
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <!-- post header -->
-                                    <div class="d-flex align-items-center mb-3">
-                                        <a href="#" class="text-decoration-none"><img src="/img/user/profile.jpg" alt="" width="50" class="rounded-circle" /></a>
-                                        <div class="flex-fill ps-2">
-                                            <div class="font-weight-600"><a href="#" class="text-decoration-none">Júlio Guimarães</a> at <a href="#" class="text-decoration-none">Rio de Janeiro</a></div>
-                                            <div class="text-gray-600 fs-13px">March 4</div>
-                                        </div>
-                                    </div>
-
-                                    <!-- post content -->
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />Quisque sodales urna justo, ac ultrices magna consectetur id.<br /><br />
-                                        Donec tempor ligula sit amet nunc porta, sed aliquam leo sagittis.<br />
-                                        Ut auctor congue efficitur. Praesent aliquam pulvinar neque, placerat semper massa elementum et.
-                                    </p>
-                                    <hr class="mb-1 ms-n2 me-n2" />
-
-                                    <!-- post action -->
-                                    <div class="row text-center mb-n3 font-weight-600">
-                                        <div class="col">
-                                            <a href="#" class="text-gray-700 text-decoration-none d-block p-2">
-                                                <i class="far fa-thumbs-up me-1 d-block d-sm-inline"></i> Likes
-                                            </a>
-                                        </div>
-                                        <div class="col">
-                                            <a href="#" class="text-gray-700 text-decoration-none d-block p-2">
-                                                <i class="far fa-comment me-1 d-block d-sm-inline"></i> Comment
-                                            </a>
-                                        </div>
-                                        <div class="col">
-                                            <a href="#" class="text-gray-700 text-decoration-none d-block p-2">
-                                                <i class="fa fa-share me-1 d-block d-sm-inline"></i> Share
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer pt-3 pb-3">
-                                    <div class="d-flex align-items-center">
-                                        <img src="/img/user/user.jpg" alt="" width="35" class="rounded-circle" />
-                                        <div class="flex-fill ps-2">
-                                            <div class="position-relative d-flex align-items-center">
-                                                <input type="text" class="form-control rounded-pill" style="padding-right: 120px;" placeholder="Write a comment..." />
-                                                <div class="position-absolute end-0 text-center">
-                                                    <a href="#" class="text-muted me-2"><i class="fa fa-smile"></i></a>
-                                                    <a href="#" class="text-muted me-2"><i class="fa fa-camera"></i></a>
-                                                    <a href="#" class="text-muted me-2"><i class="fa fa-video"></i></a>
-                                                    <a href="#" class="text-muted me-3"><i class="fa fa-paw"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
 
                             <!-- SECOND POSTS: IMAGE -->
                             <div class="card mb-3">
                                 <div class="card-body pb-0">
                                     <!-- post header -->
                                     <div class="d-flex align-items-center mb-3">
-                                        <a href="#"><img src="/img/user/profile.jpg" alt="" width="50" class="rounded-circle" /></a>
+                                        <a href="#"><img src="/img/user/user.jpg" alt="" width="50" class="rounded-circle" /></a>
                                         <div class="flex-fill ps-2">
                                             <div class="font-weight-600"><a href="#" class="text-decoration-none">Júlio Guimarães</a> at <a href="#" class="text-decoration-none">Rio de Janeiro</a></div>
                                             <div class="text-gray-600 fs-13px">May 5</div>
@@ -331,7 +283,7 @@
                                 <div class="card-body pb-0">
                                     <!-- post header -->
                                     <div class="d-flex align-items-center mb-3">
-                                        <a href="#"><img src="/img/user/profile.jpg" alt="" width="50" class="rounded-circle" /></a>
+                                        <a href="#"><img src="/img/user/user.jpg" alt="" width="50" class="rounded-circle" /></a>
                                         <div class="flex-fill ps-2">
                                             <div class="font-weight-600"><a href="#" class="text-decoration-none">Júlio Guimarães</a> at <a href="#" class="text-decoration-none">Rio de Janeiro</a></div>
                                             <div class="text-gray-600 fs-13px">March 12</div>
@@ -391,7 +343,7 @@
                                 <div class="card-body">
                                     <!-- post header -->
                                     <div class="d-flex align-items-center mb-3">
-                                        <a href="#"><img src="/img/user/profile.jpg" alt="" width="50" class="rounded-circle" /></a>
+                                        <a href="#"><img src="/img/user/user.jpg" alt="" width="50" class="rounded-circle" /></a>
                                         <div class="flex-fill ps-2">
                                             <div class="font-weight-600"><a href="#" class="text-decoration-none">Júlio Guimarães</a> at <a href="#" class="text-decoration-none">Rio de Janeiro</a></div>
                                             <div class="text-gray-600 fs-13px">May 5</div>
@@ -450,7 +402,6 @@
 
                         </div>
                         <!-- END tab-pane -->
-
                         <!-- BEGIN tab-pane PROFILE -->
                         <div class="tab-pane fade" id="profile-followers">
                             <div class="list-group">
@@ -538,7 +489,6 @@
                             <div class="text-center p-3"><a href="#" class="text-dark text-decoration-none">Show more <b class="caret"></b></a></div>
                         </div>
                         <!-- END tab-pane -->
-
                         <!-- BEGIN tab-pane -->
                         <div class="tab-pane fade" id="profile-media">
                             <div class="card mb-3">

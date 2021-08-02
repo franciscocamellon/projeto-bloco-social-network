@@ -21,7 +21,7 @@ namespace SocialNetwork.Data.Repositories
         public async Task<Profile> GetProfileByUserIdAsync(string userId)
         {
             return await _dbContext.Profiles
-                                        .AsNoTracking()
+                                        .AsNoTrackingWithIdentityResolution()
                                         .FirstOrDefaultAsync(x => x.UserId == userId);
         }
 

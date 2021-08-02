@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Domain.Entities;
+using SocialNetwork.Domain.Interfaces.Infrastructure;
 using SocialNetwork.Domain.Interfaces.Respositories;
 using System.Threading.Tasks;
 
@@ -8,9 +10,15 @@ namespace SocialNetwork.Web.Controllers
 {
     public class FeedController : Controller
     {
+        private readonly UserManager<User> _userManager;
+        private readonly IProfileRepository _profileRepository;
         private readonly IPostRepository _postRepository;
-        public FeedController(IPostRepository postRepository)
+        public FeedController(UserManager<User> userManager, 
+                              IProfileRepository profileRepository,
+                              IPostRepository postRepository)
         {
+            _userManager = userManager;
+            _profileRepository = profileRepository;
             _postRepository = postRepository;
         }
 
@@ -26,6 +34,16 @@ namespace SocialNetwork.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> OnInsertPost([FromForm] Post post)
         {
+            //recuperando user completo do banco de dados
+            var currentUserId = _userManager.GetUserId(User);
+
+            //obter a entidade perfil
+            var profileFromBd = await _profileRepository.GetProfileByUserIdAsync(currentUserId);
+
+            //atribuindo o profile do usuário logado no post
+            post.Profile = profileFromBd;
+
+            //inserindo no banco de dados
             await _postRepository.InsertAsync(post);
 
             return RedirectToAction(nameof(Index));
