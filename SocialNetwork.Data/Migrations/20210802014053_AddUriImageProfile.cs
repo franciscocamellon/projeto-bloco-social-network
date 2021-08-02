@@ -8,7 +8,7 @@ namespace SocialNetwork.Data.Migrations
         {
             migrationBuilder.AddColumn<string>(
                 name: "UriImageProfile",
-                table: "AspNetUsers",
+                table: "Profiles",
                 type: "nvarchar(max)",
                 nullable: true);
         }
@@ -17,7 +17,7 @@ namespace SocialNetwork.Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "UriImageProfile",
-                table: "AspNetUsers");
+                table: "Profiles");
         }
     }
 }

@@ -5,6 +5,10 @@ using Newtonsoft.Json;
 using SocialNetwork.Domain.Entities;
 using SocialNetwork.Domain.Interfaces.Infrastructure;
 using System;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace SocialNetwork.Web.Controllers
@@ -51,7 +55,6 @@ namespace SocialNetwork.Web.Controllers
             if (profileFromBd == null)
             {
                 await _profileRepository.InsertAsync(profileForm);
-
                 return RedirectToAction(nameof(Edit));
             }
             else
@@ -59,9 +62,20 @@ namespace SocialNetwork.Web.Controllers
                 if (profileFromBd.Id != profileForm.Id)
                     throw new ApplicationException("UserId is different from database");
 
+                //mantendo integro a imagem de profile (se existir)
+                profileForm.UriImageProfile = profileFromBd.UriImageProfile;
+
+                //atualizando no banco de dados
+                await _profileRepository.UpdateAsync(profileForm);
+            }
+
+            ViewBag.ShowMessage = true;
+            return View(profileForm);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> EditImageProfile(IFormCollection form, 
-                                           [FromServices] IHttpClientFactory clientFactory)
+        public async Task<IActionResult> EditImageProfile(IFormCollection form,
+                                                          [FromServices] IHttpClientFactory clientFactory)
         {
             using (var content = new MultipartFormDataContent())
             {
@@ -69,29 +83,33 @@ namespace SocialNetwork.Web.Controllers
                 {
                     content.Add(CreateFileContent(file.OpenReadStream(), file.FileName, file.ContentType));
                 }
-                
+
                 var httpClient = clientFactory.CreateClient();
                 var response = await httpClient.PostAsync("api/image", content);
-                
+
                 response.EnsureSuccessStatusCode();
                 var responseResult = await response.Content.ReadAsStringAsync();
                 var uriImagem = JsonConvert.DeserializeObject<string[]>(responseResult).FirstOrDefault();
 
-
                 //recuperando user completo do banco de dados
-                var userFromDb = await GetUserAsync();
+                var currentUserId = _userManager.GetUserId(User);
 
-                //recuperando dados do formulário (view)
-                userFromDb.UriImageProfile = uriImagem;
-
-                //atualizando dados
-                await _userManager.UpdateAsync(userFromDb);
-
-                //atualizando dados da sessão atual
-                await _signInManager.RefreshSignInAsync(userFromDb);
+                //obter a entidade perfil do banco
+                var profileFromBd = await _profileRepository.GetProfileByUserIdAsync(currentUserId);
+                if (profileFromBd == null)
+                {
+                    var profileToInsert = new Profile();
+                    profileToInsert.UserId = currentUserId;
+                    profileToInsert.UriImageProfile = uriImagem;
+                    await _profileRepository.InsertAsync(profileToInsert);
+                }
+                else
+                {
+                    profileFromBd.UriImageProfile = uriImagem;
+                    await _profileRepository.UpdateAsync(profileFromBd);
+                }
             }
 
-            ViewBag.ShowMessage = true;
             return RedirectToAction(nameof(Edit));
         }
 
@@ -106,12 +124,6 @@ namespace SocialNetwork.Web.Controllers
 
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             return fileContent;
-        }
-
-        private async Task<User> GetUserAsync() => await _userManager.GetUserAsync(User);
-
-            ViewBag.ShowMessage = true;
-            return View(profileForm);
         }
     }
 }

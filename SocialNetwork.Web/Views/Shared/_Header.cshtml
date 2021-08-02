@@ -1,11 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using SocialNetwork.Domain.Entities
+@using SocialNetwork.Domain.Interfaces.Infrastructure
 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+@inject IProfileRepository profileRepo
 
 @{
-    var customUser = await UserManager.GetUserAsync(User);
+    var userIdentity = await UserManager.GetUserAsync(User);
+    var profile = await profileRepo.GetProfileByUserIdAsync(userIdentity.Id);
+
 }
 
 <!-- BEGIN #header -->
@@ -43,7 +47,7 @@
         <div class="menu-item dropdown">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-img online">
-                    <img src="@(customUser.UriImageProfile ?? "~/img/user/user.jpg")" alt="" class="mw-100 mh-100 rounded-circle" />
+                    <img src="@(profile?.UriImageProfile != null ? profile.UriImageProfile : "/img/user/user.jpg")" alt="" class="mw-100 mh-100 rounded-circle" />
                 </div>
                 <div class="menu-text">@User.Identity.Name</div>
             </a>

@@ -92,7 +92,7 @@
                                             <div class="mb-3">
                                                 <div class="profile-header-content">
                                                     <div class="profile-header-img">
-                                                        <img src="@(Model.UriImageProfile ?? "~/img/user/user.jpg")" class="img-fluid img-thumbnail" style="width: 200px;" />
+                                                        <img src="@(Model?.UriImageProfile != null ? Model.UriImageProfile : "/img/user/user.jpg")" class="img-fluid img-thumbnail" style="width: 200px;" />
                                                     </div>
                                                 </div>
                                             </div>
