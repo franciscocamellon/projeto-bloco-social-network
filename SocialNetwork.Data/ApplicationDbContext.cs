@@ -11,6 +11,8 @@ namespace SocialNetwork.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {
+        public DbSet<Post> Posts { get; set; }
+
         public DbSet<Profile> Profiles { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

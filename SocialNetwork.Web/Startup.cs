@@ -5,9 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocialNetwork.Data;
-using SocialNetwork.Data.Repositories;
+using SocialNetwork.Data.Respositories;
 using SocialNetwork.Domain.Entities;
-using SocialNetwork.Domain.Interfaces.Infrastructure;
+using SocialNetwork.Domain.Interfaces.Respositories;
+using SocialNetwork.Web.Controllers;
 using System;
 
 namespace SocialNetwork.Web
@@ -28,6 +29,7 @@ namespace SocialNetwork.Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
 
             services.AddDefaultIdentity<User>(options => {
