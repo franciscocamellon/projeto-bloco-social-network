@@ -1,4 +1,4 @@
-﻿@model SocialNetwork.Domain.Entities.User
+﻿@model SocialNetwork.Domain.Entities.Profile
 
 
 @{
@@ -90,6 +90,8 @@
                             <div class="card-body pb-2">
                                 <form asp-action="Edit">
 
+                                    <input type="hidden" asp-for="Id" />
+                                    
                                     <div class="row">
                                         <div class="col-xl-6">
                                             <div class="mb-3">

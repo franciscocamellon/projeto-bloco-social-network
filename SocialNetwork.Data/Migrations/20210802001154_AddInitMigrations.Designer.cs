@@ -10,8 +10,8 @@ using SocialNetwork.Data;
 namespace SocialNetwork.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210725151503_AddUserFirstLastName")]
-    partial class AddUserFirstLastName
+    [Migration("20210802001154_AddInitMigrations")]
+    partial class AddInitMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -174,12 +174,6 @@ namespace SocialNetwork.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");

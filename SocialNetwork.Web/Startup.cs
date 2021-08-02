@@ -5,7 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocialNetwork.Data;
+using SocialNetwork.Data.Repositories;
 using SocialNetwork.Domain.Entities;
+using SocialNetwork.Domain.Interfaces.Infrastructure;
 
 namespace SocialNetwork.Web
 {
@@ -24,6 +26,8 @@ namespace SocialNetwork.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IProfileRepository, ProfileRepository>();
 
             services.AddDefaultIdentity<User>(options => {
                 options.SignIn.RequireConfirmedAccount = true;
