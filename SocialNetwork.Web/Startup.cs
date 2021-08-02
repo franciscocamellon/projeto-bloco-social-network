@@ -8,9 +8,7 @@ using SocialNetwork.Data;
 using SocialNetwork.Data.Repositories;
 using SocialNetwork.Data.Respositories;
 using SocialNetwork.Domain.Entities;
-using SocialNetwork.Domain.Interfaces.Infrastructure;
-using SocialNetwork.Domain.Interfaces.Respositories;
-using SocialNetwork.Web.Controllers;
+using SocialNetwork.Domain.Interfaces.Repositories;
 using System;
 
 namespace SocialNetwork.Web
