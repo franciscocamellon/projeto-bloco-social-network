@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Domain.Entities;
-using SocialNetwork.Domain.Interfaces.Infrastructure;
-using SocialNetwork.Domain.Interfaces.Respositories;
+using SocialNetwork.Domain.Interfaces.Repositories;
 using System.Threading.Tasks;
 
 namespace SocialNetwork.Web.Controllers

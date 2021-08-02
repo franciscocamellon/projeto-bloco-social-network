@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocialNetwork.Domain.Interfaces.Respositories
+namespace SocialNetwork.Domain.Interfaces.Repositories
 {
     public interface IPostRepository
     {

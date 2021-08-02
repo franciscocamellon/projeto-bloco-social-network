@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Domain.Entities;
-using SocialNetwork.Domain.Interfaces.Respositories;
+using SocialNetwork.Domain.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SocialNetwork.Data.Respositories
+namespace SocialNetwork.Data.Repositories
 {
     public class PostRepository : IPostRepository
     {

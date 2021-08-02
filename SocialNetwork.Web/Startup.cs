@@ -6,10 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocialNetwork.Data;
 using SocialNetwork.Data.Repositories;
-using SocialNetwork.Data.Respositories;
 using SocialNetwork.Domain.Entities;
 using SocialNetwork.Domain.Interfaces.Repositories;
-using SocialNetwork.Domain.Interfaces.Respositories;
 using System;
 
 namespace SocialNetwork.Web
