@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "storage1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/stinfnetsocialnetwork",
+      "type": "storage.azure",
+      "connectionId": "ConnectionStrings:StorageAccount",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}
