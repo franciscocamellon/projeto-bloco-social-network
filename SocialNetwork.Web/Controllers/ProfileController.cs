@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialNetwork.Domain.Entities;
-using SocialNetwork.Domain.Interfaces.Infrastructure;
+using SocialNetwork.Domain.Interfaces.Repositories;
 using System;
 using System.IO;
 using System.Linq;
