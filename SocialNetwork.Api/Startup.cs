@@ -22,7 +22,7 @@ namespace SocialNetwork.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IBlobService, BlobService>(provider =>
-                        new BlobService(Configuration.GetConnectionString("StorageAccount")));
+                        new BlobService(Configuration.GetValue<string>("StorageAccount")));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
