@@ -206,6 +206,9 @@ namespace SocialNetwork.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("UserType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")

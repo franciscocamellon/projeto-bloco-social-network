@@ -10,7 +10,7 @@ using SocialNetwork.Data;
 namespace SocialNetwork.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210725144810_AddInitMigrations")]
+    [Migration("20210903003307_AddInitMigrations")]
     partial class AddInitMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -207,6 +207,9 @@ namespace SocialNetwork.Data.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("UserType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
