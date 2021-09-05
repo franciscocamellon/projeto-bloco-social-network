@@ -33,6 +33,11 @@ namespace SocialNetwork.Web.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Tipo de usuário")]
+            public string UserType { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -47,6 +52,7 @@ namespace SocialNetwork.Web.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                UserType = user.UserType,
                 PhoneNumber = phoneNumber
             };
         }
@@ -87,6 +93,13 @@ namespace SocialNetwork.Web.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            if (Input.UserType != user.UserType)
+            {
+                user.UserType = Input.UserType;
+            }
+
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

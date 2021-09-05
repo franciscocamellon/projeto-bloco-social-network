@@ -5,5 +5,7 @@ namespace SocialNetwork.Domain.Entities
 {
     public class User : IdentityUser
     {
+        [PersonalData]
+        public string UserType { get; set; }
     }
 }
