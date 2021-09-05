@@ -7,7 +7,8 @@ using Microsoft.Extensions.Hosting;
 using SocialNetwork.Data;
 using SocialNetwork.Data.Repositories;
 using SocialNetwork.Domain.Entities;
-using SocialNetwork.Domain.Interfaces.Infrastructure;
+using SocialNetwork.Domain.Interfaces.Repositories;
+using System;
 
 namespace SocialNetwork.Web
 {
@@ -40,21 +41,16 @@ namespace SocialNetwork.Web
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddHttpClient("", client => {
+                client.BaseAddress = new Uri(Configuration["BaseUrlApi"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
