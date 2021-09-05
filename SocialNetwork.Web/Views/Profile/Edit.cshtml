@@ -1,8 +1,17 @@
 ﻿@model SocialNetwork.Domain.Entities.Profile
-
+@using Microsoft.AspNetCore.Identity
+@using SocialNetwork.Domain.Entities
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> _userManager;
 
 @{
     ViewData["Title"] = "Index";
+
+    System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+    var userApp = await _userManager.GetUserAsync(currentUser);
+    var userName = userApp.UserName;
+    //var lastName = userApp.LastName;
+    var userType = userApp.UserType;
 
 }
 
@@ -80,9 +89,9 @@
 
                         @if (ViewBag.ShowMessage != null)
                         {
-                        <div class="alert alert-success">
-                            <strong>Feito!</strong> Os dados do seu perfil foram atualizados com sucesso.
-                        </div>
+                            <div class="alert alert-success">
+                                <strong>Feito!</strong> Os dados do seu perfil foram atualizados com sucesso.
+                            </div>
                         }
 
 
@@ -91,7 +100,7 @@
                                 <form asp-action="Edit">
 
                                     <input type="hidden" asp-for="Id" />
-                                    
+
                                     <div class="row">
                                         <div class="col-xl-6">
                                             <div class="mb-3">
@@ -106,14 +115,21 @@
                                                 <input type="text" class="form-control" id="LastNameInput" asp-for="LastName" placeholder="ex: Guimarães" />
                                             </div>
                                         </div>
+                                        <div class="col-xl-6">
+                                            <div class="mb-3">
+                                                <label asp-for="PublishedApps" class="control-label">Aplicativos publicados</label>
+                                                <input asp-for="PublishedApps" class="form-control" />
+                                                <span asp-validation-for="PublishedApps" class="text-danger"></span>
+                                            </div>
+                                        </div>
 
 
                                         <div class="col-xl-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Data Nascimento <span class="text-danger">*</span></label>
+                                                <label class="form-label">Data de formação <span class="text-danger">*</span></label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="dataNascimentoInput" placeholder="ex 30/07/1995" />
-                                                    <label class="input-group-text" for="dataNascimentoInput"><i class="fa fa-calendar"></i></label>
+                                                    <input type="text" class="form-control" id="graduationDateInput" asp-for="GraduationDate" placeholder="ex 30/07/1995" />
+                                                    <label class="input-group-text" for="graduationDateInput"><i class="fa fa-calendar"></i></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,12 +140,11 @@
 
                                         <div class="col-xl-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Gênero <span class="text-danger">*</span></label>
-                                                <select class="form-control" id="GeneroInput">
+                                                <label class="form-label">Tipo de perfil <span class="text-danger">*</span></label>
+                                                <select class="form-control" id="userTypeInput" >
                                                     <option value=""></option>
-                                                    <option value="Masculino">Masculino</option>
-                                                    <option value="Feminino">Feminino</option>
-                                                    <option value="Outro">Outro</option>
+                                                    <option value="Masculino">Developer</option>
+                                                    <option value="Feminino">Enterprise</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -181,6 +196,3 @@
     <!-- END row -->
 </div>
 <!-- END container -->
-
-
-

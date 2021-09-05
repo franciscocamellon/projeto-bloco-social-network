@@ -10,8 +10,8 @@ using SocialNetwork.Data;
 namespace SocialNetwork.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210903003307_AddInitMigrations")]
-    partial class AddInitMigrations
+    [Migration("20210904180130_AddUpdatedProfile")]
+    partial class AddUpdatedProfile
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -154,6 +154,36 @@ namespace SocialNetwork.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("SocialNetwork.Domain.Entities.Profile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("EmployedStatus")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("GraduationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PublishedApps")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Profiles");
                 });
 
             modelBuilder.Entity("SocialNetwork.Domain.Entities.User", b =>

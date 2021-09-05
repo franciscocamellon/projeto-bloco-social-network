@@ -161,11 +161,20 @@ namespace SocialNetwork.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("EmployedStatus")
+                        .HasColumnType("bit");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("GraduationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PublishedApps")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
