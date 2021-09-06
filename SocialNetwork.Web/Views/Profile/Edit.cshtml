@@ -11,7 +11,6 @@
     var userApp = await _userManager.GetUserAsync(currentUser);
     var userName = userApp.UserName;
     //var lastName = userApp.LastName;
-    var userType = userApp.UserType;
 
 }
 
@@ -61,7 +60,7 @@
 
     <script>
         $(document).ready(function () {
-            $('#dataNascimentoInput').datepicker({
+            $('#graduationDateInput').datepicker({
                 autoclose: true,
                 format: 'dd/mm/yyyy',
                 language: 'pt-BR'
@@ -159,25 +158,48 @@
                                     <div class="row">
                                         <div class="col-xl-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Primeiro Nome <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="FirstNameInput" asp-for="FirstName" placeholder="ex: Julio" />
+                                                <label class="form-label">Tipo de perfil <span class="text-danger">*</span></label>
+                                                <select class="form-control" id="userTypeInput" asp-for="UserType">
+                                                    <option value=""></option>
+                                                    <option value="developer">Developer</option>
+                                                    <option value="enterprise">Enterprise</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xl-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Nome <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="FirstNameInput" asp-for="FirstName" placeholder="ex: John" />
                                             </div>
                                         </div>
 
                                         <div class="col-xl-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Sobrenome <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="LastNameInput" asp-for="LastName" placeholder="ex: Guimarães" />
+                                                <input type="text" class="form-control" id="LastNameInput" asp-for="LastName" placeholder="ex: Smith" />
                                             </div>
                                         </div>
+                                        
+                                        <div class="col-xl-8">
+                                            <div class="mb-4">
+                                                <label class="form-label">Bio <span class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="bioInput" rows="3" asp-for="Bio"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-xl-6">
                                             <div class="mb-3">
-                                                <label asp-for="PublishedApps" class="control-label">Aplicativos publicados</label>
+                                                <label class="form-label">Aplicativos publicados</label>
                                                 <input asp-for="PublishedApps" class="form-control" />
                                                 <span asp-validation-for="PublishedApps" class="text-danger"></span>
                                             </div>
                                         </div>
-
 
                                         <div class="col-xl-6">
                                             <div class="mb-3">
@@ -189,33 +211,15 @@
                                             </div>
                                         </div>
 
-                                    </div>
-
-                                    <div class="row">
-
                                         <div class="col-xl-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Tipo de perfil <span class="text-danger">*</span></label>
-                                                <select class="form-control" id="userTypeInput" >
-                                                    <option value=""></option>
-                                                    <option value="Masculino">Developer</option>
-                                                    <option value="Feminino">Enterprise</option>
-                                                </select>
+                                            <div class="form-check">
+                                                <label class="form-check-label" for="employedStatusCheck" asp-for="EmployedStatus" >Empregado</label>
+                                                <input type="checkbox" class="form-check-input" id="employedStatusCheck" asp-for="EmployedStatus" />
+                                                <span asp-validation-for="EmployedStatus" class="text-danger"></span>
                                             </div>
                                         </div>
 
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="col-xl-8">
-                                            <div class="mb-4">
-                                                <label class="form-label">Bio <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="bioInput" rows="3"></textarea>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                    </div></br>
 
                                     <div class="mb-3 row">
                                         <div class="col-sm-10">
