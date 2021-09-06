@@ -28,6 +28,7 @@ namespace SocialNetwork.Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
 
             services.AddDefaultIdentity<User>(options => {

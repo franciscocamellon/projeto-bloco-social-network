@@ -8,7 +8,7 @@
 
 @{
     var userIdentity = await UserManager.GetUserAsync(User);
-    var profile = await profileRepo.GetProfileByUserIdAsync(userIdentity.Id);
+    var profile = await profileRepo.GetProfileByUserIdAsync(userIdentity?.Id);
 
 }
 
