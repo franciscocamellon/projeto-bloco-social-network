@@ -19,15 +19,7 @@ namespace SocialNetwork.Domain.Entities
         public string UriImageProfile { get; set; }
         public string UserId { get; set; }
 
-    }   
         [NotMapped]
-        public string FullName 
-        { 
-            get 
-            { 
-                return $"{FirstName} {LastName}"; 
-            }
-        }
-
+        public string FullName => $"{FirstName} {LastName}";
     }
 }

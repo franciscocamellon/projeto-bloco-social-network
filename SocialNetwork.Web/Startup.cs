@@ -69,7 +69,7 @@ namespace SocialNetwork.Web
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Dashboard}/{action=Index}");
+                    pattern: "{controller=Feed}/{action=Index}");
                 endpoints.MapRazorPages();
             });
         }

@@ -68,10 +68,9 @@
             <div class="desktop-sticky-top">
                 <!-- profile info -->
                 <h4>@(profile?.FullName != null ? profile?.FullName : "Not Setted")</h4>
-                <div class="font-weight-600 mb-3 text-muted mt-n2">@@jcguimaraes</div>
+                <div class="font-weight-600 mb-3 text-muted mt-n2">@($"@{userIdentity?.UserName}")</div>
                 <p>
-                    Here are many variations of passages of Lorem Ipsum available, but the majority
-                    have suffered alteration in some form, by injected humour, or randomised words which don't look.
+                    @(profile?.Bio != String.Empty ? profile?.Bio : "...")
                 </p>
                 <div class="mb-1">
                     <i class="fa fa-map-marker-alt fa-fw text-muted"></i> Rio de Janeiro, RJ
