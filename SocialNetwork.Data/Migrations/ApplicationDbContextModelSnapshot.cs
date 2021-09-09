@@ -154,6 +154,28 @@ namespace SocialNetwork.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SocialNetwork.Domain.Entities.Album", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AlbumName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Albums");
+                });
+
             modelBuilder.Entity("SocialNetwork.Domain.Entities.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -281,29 +303,6 @@ namespace SocialNetwork.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("SocialNetwork.Domain.Entities.UserPhotos", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AddingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ProfileId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserPhoto")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("Photos");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -355,6 +354,17 @@ namespace SocialNetwork.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SocialNetwork.Domain.Entities.Album", b =>
+                {
+                    b.HasOne("SocialNetwork.Domain.Entities.Profile", "Profile")
+                        .WithMany("Albums")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("SocialNetwork.Domain.Entities.Post", b =>
                 {
                     b.HasOne("SocialNetwork.Domain.Entities.Profile", "Profile")
@@ -364,13 +374,9 @@ namespace SocialNetwork.Data.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("SocialNetwork.Domain.Entities.UserPhotos", b =>
+            modelBuilder.Entity("SocialNetwork.Domain.Entities.Profile", b =>
                 {
-                    b.HasOne("SocialNetwork.Domain.Entities.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId");
-
-                    b.Navigation("Profile");
+                    b.Navigation("Albums");
                 });
 #pragma warning restore 612, 618
         }

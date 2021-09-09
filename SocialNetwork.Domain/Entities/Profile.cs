@@ -18,6 +18,7 @@ namespace SocialNetwork.Domain.Entities
         public string Bio { get; set; }
         public string UriImageProfile { get; set; }
         public string UserId { get; set; }
+        public List<Album> Albums { get; set; }
 
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}";

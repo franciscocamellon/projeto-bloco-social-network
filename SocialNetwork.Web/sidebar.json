@@ -12,7 +12,7 @@
       "text": "Feed"
     },
     {
-      "controller": "UserPhotos",
+      "controller": "Albums",
       "action": "Index",
       "area": "",
       "icon": "fas fa-camera",
@@ -24,6 +24,12 @@
       "area": "",
       "icon": "fa fa-mobile-alt",
       "text": "Aplicativos"
+    },{
+      "controller": "Albums",
+      "action": "Index",
+      "area": "",
+      "icon": "fa fa-mobile-alt",
+      "text": "Teste fotos"
     },
 
     {
