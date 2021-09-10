@@ -31,6 +31,7 @@ namespace SocialNetwork.Web
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IAlbumRepository, AlbumRepository>();
+            services.AddScoped<IPictureRepository, PictureRepository>();
 
             services.AddDefaultIdentity<User>(options => {
                 options.SignIn.RequireConfirmedAccount = true;

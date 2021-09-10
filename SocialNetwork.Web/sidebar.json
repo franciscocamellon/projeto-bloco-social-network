@@ -25,7 +25,7 @@
       "icon": "fa fa-mobile-alt",
       "text": "Aplicativos"
     },{
-      "controller": "Albums",
+      "controller": "Pictures",
       "action": "Index",
       "area": "",
       "icon": "fa fa-mobile-alt",
