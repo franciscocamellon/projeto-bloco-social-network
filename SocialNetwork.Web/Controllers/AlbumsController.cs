@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SocialNetwork.Data;
 using SocialNetwork.Domain.Entities;
 using SocialNetwork.Domain.Interfaces.Repositories;
@@ -20,16 +25,19 @@ namespace SocialNetwork.Web.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IProfileRepository _profileRepository;
         private readonly IAlbumRepository _albumRepository;
+        private readonly IPictureRepository _pictureRepository;
 
         public AlbumsController(ApplicationDbContext context,
                                 UserManager<User> userManager,
                                 IProfileRepository profileRepository,
-                                IAlbumRepository albumRepository)
+                                IAlbumRepository albumRepository,
+                                IPictureRepository pictureRepository)
         {
             _context = context;
             _userManager = userManager;
             _profileRepository = profileRepository;
             _albumRepository = albumRepository;
+            _pictureRepository = pictureRepository;
         }
 
         // GET: Albums
@@ -72,6 +80,65 @@ namespace SocialNetwork.Web.Controllers
         {
             return View();
         }
+        
+        // GET: Albums/Create
+        public IActionResult CreatePicture()
+        {
+            return View();
+        }
+
+        // POST: Albums/CreatePicture
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreatePicture(IFormCollection form,
+        //                                               [FromServices] IHttpClientFactory clientFactory,
+        //                                               Picture picture,
+        //                                               Album album)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        using (var content = new MultipartFormDataContent())
+        //        {
+        //            foreach (var file in form.Files)
+        //            {
+        //                content.Add(CreateFileContent(file.OpenReadStream(), file.FileName, file.ContentType));
+        //            }
+
+        //            var httpClient = clientFactory.CreateClient();
+        //            var response = await httpClient.PostAsync("api/image", content);
+
+        //            response.EnsureSuccessStatusCode();
+        //            var responseResult = await response.Content.ReadAsStringAsync();
+        //            var uriImage = JsonConvert.DeserializeObject<string[]>(responseResult).FirstOrDefault();
+                
+        //            //recuperando user completo do banco de dados
+        //            var currentUserId = _userManager.GetUserId(User);
+
+        //            //obter a entidade perfil do banco
+        //            var profileFromBd = await _profileRepository.GetProfileByUserIdAsync(currentUserId);
+
+        //            if (profileFromBd == null)
+        //            {
+        //                var albumToInsert = new Album();
+        //                albumToInsert.Id = Guid.NewGuid();
+        //                albumToInsert.
+        //            }
+
+        //            var chosenAlbum = await _albumRepository.GetByIdAsync(id.Value);
+        //            profileFromBd.
+        //            album.ProfileId = profile.Id;
+        //            picture.Id = Guid.NewGuid();
+        //            picture.AlbumId = album.Id;
+        //            picture.UploadDate = DateTime.Now;
+        //            picture.UriImageAlbum = uriImage;
+
+        //            await _pictureRepository.CreateAsync(picture);
+
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //    }
+        //    return View(picture);
+        //}
 
         // POST: Albums/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -181,6 +248,19 @@ namespace SocialNetwork.Web.Controllers
             var any = album != null;
 
             return any;
+        }
+
+        private StreamContent CreateFileContent(Stream stream, string fileName, string contentType)
+        {
+            var fileContent = new StreamContent(stream);
+            fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "\"files\"",
+                FileName = "\"" + fileName + "\""
+            };
+
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+            return fileContent;
         }
     }
 }

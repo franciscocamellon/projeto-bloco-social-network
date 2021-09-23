@@ -115,16 +115,16 @@
                                 <!-- BEGIN btn-group -->
                                 <div class="ms-auto btn-group">
                                     <a href="#" class="btn btn-default btn-sm"><i class="fa fa-play"></i></a>
-                                    <a href="#" class="btn btn-default btn-sm"><i class="fa fa-plus"></i></a>
+                                    <a asp-action="Create" asp-route-id="@item?.Id" class="btn btn-default btn-sm"><i class="fa fa-plus"></i></a>
                                     <a asp-action="Delete" asp-route-id="@item?.Id" class="btn btn-default btn-sm"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                                 <!-- END btn-group -->
                             </div>
                             <!-- END gallery-header -->
                             <!-- BEGIN gallery-image -->
-                            @if (item != null)
+                            @if (Model.Pictures != null)
                             {
-                                @foreach (var picture in item?.Pictures)
+                                @foreach (var picture in Model.Pictures)
                                 {
                                     <div class="gallery-image">
                                         <ul class="gallery-image-list">
