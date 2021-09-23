@@ -25,6 +25,7 @@ namespace SocialNetwork.Api
                         new BlobService(Configuration.GetValue<string>("StorageAccount")));
 
             services.AddControllers();
+            services.AddCors();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SocialNetwork.Api", Version = "v1" });
@@ -42,9 +43,8 @@ namespace SocialNetwork.Api
             });
 
             app.UseHttpsRedirection();
-
+            app.UseCors(option => option.AllowAnyOrigin());
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
