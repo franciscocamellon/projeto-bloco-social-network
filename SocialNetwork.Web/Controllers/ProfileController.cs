@@ -89,7 +89,7 @@ namespace SocialNetwork.Web.Controllers
 
                 response.EnsureSuccessStatusCode();
                 var responseResult = await response.Content.ReadAsStringAsync();
-                var uriImagem = JsonConvert.DeserializeObject<string[]>(responseResult).FirstOrDefault();
+                var uriImage = JsonConvert.DeserializeObject<string[]>(responseResult).FirstOrDefault();
 
                 //recuperando user completo do banco de dados
                 var currentUserId = _userManager.GetUserId(User);
@@ -100,12 +100,12 @@ namespace SocialNetwork.Web.Controllers
                 {
                     var profileToInsert = new Profile();
                     profileToInsert.UserId = currentUserId;
-                    profileToInsert.UriImageProfile = uriImagem;
+                    profileToInsert.UriImageProfile = uriImage;
                     await _profileRepository.InsertAsync(profileToInsert);
                 }
                 else
                 {
-                    profileFromBd.UriImageProfile = uriImagem;
+                    profileFromBd.UriImageProfile = uriImage;
                     await _profileRepository.UpdateAsync(profileFromBd);
                 }
             }
