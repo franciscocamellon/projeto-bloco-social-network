@@ -43,7 +43,31 @@
                     <label class="form-check-label fw-500" asp-for="Input.RememberMe">@Html.DisplayNameFor(m => m.Input.RememberMe)</label>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg d-block w-100 fw-500 mb-3">Sign In</button>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary btn-lg d-block w-100 fw-500 mb-3">Sign In</button>
+            </div>
+
+            <div class="mb-3">
+                <a class="btn btn-outline-dark w-100 fw-500 mb-3" href="" role="button" style="text-transform:none">
+                    <i class="fab fa-github"></i> Sign in with Github
+                </a>
+            </div>
+
+            <div class="mb-3">
+                <a class="btn btn-outline-dark w-100 fw-500 mb-3" href="" role="button" style="text-transform:none">
+                    <i class="fab fa-google"></i> Sign in with Google
+                </a>
+            </div>
+
+            <!-- Minified CSS and JS -->
+            <link rel="stylesheet"
+                  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+                  crossorigin="anonymous">
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                    crossorigin="anonymous">
+            </script>
             <div class="text-center text-muted">
                 Don't have an account yet? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Sign up</a>.
             </div>
