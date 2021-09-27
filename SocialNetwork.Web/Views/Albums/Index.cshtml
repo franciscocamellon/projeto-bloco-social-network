@@ -1,13 +1,7 @@
-@using static SocialNetwork.Domain.Entities.Picture
-@model IEnumerable<SocialNetwork.Domain.Entities.Album>
+@model AlbumIndexViewModel
 
 @{
-    ViewData["Title"] = "Gallery";
-    ViewData["AppClass"] = "app-content-full-height";
-    ViewData["AppContentClass"] = "p-0";
-    ViewData["HtmlAttribute"] = "itemscope itemtype='http://schema.org/WebPage'";
-
-    var pictures = Model;
+    ViewData["Title"] = "Settings";
 }
 
 @section Styles {
@@ -16,12 +10,15 @@
 }
 
 @section Scripts {
+    <script src="~/lib/highlight.js/highlight.min.js"></script>
+    <script src="~/js/demo/highlightjs.demo.js"></script>
+    <script src="~/js/demo/sidebar-scrollspy.demo.js"></script>
     <script src="~/lib/photoswipe/dist/photoswipe-ui-default.min.js"></script>
     <script src="~/lib/photoswipe/dist/photoswipe.min.js"></script>
     <script src="~/js/demo/page-gallery.demo.js"></script>
 }
 
-@section OutterAppContainerContent {
+@section OutterAppContainerContent  {
     <!-- BEGIN photoswipe -->
     <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="pswp__bg"></div>
@@ -59,90 +56,86 @@
     </div>
     <!-- END photoswipe -->
 }
-<!-- BEGIN d-flex -->
-<div class="d-block d-md-flex align-items-stretch h-100">
-    <!-- BEGIN gallery-menu-container -->
-    <div class="gallery-menu-container">
-        <!-- BEGIN scrollbar -->
-        <div data-scrollbar="true" data-height="100%" data-skip-mobile="true">
-            <!-- BEGIN gallery-menu -->
-            <div class="gallery-menu">
-                <div class="gallery-menu-header">Main</div>
-                <div class="gallery-menu-item"><a asp-action="Create" class="gallery-menu-link">Create albums</a></div>
-                <div class="gallery-menu-header">Albums</div>
-                @if (Model != null)
-                {
-                    @foreach (var item in Model)
-                    {
-                        <div class="gallery-menu-item"><a asp-action="Details" asp-route-id="@item?.Id" class="gallery-menu-link"><i class="fa fa-fw fa-camera-retro me-1"></i> @(item?.AlbumName)</a></div>
-                    }
-                }
-               
-            </div>
-            <!-- END gallery-menu -->
-        </div>
-        <!-- end scrollbar -->
-    </div>
-    <!-- END gallery-menu-container -->
 
-    
-        <!-- BEGIN gallery-content-container -->
-        <div class="gallery-content-container">
-            <!-- BEGIN scrollbar -->
-            <div data-scrollbar="true" data-height="100%">
-                <!-- BEGIN gallery-content -->
-                <div class="gallery-content">
-                @if (Model != null)
-                {
-                    @foreach (var item in Model)
+<div class="modal" id="myModal"></div>
+<!-- BEGIN container -->
+<div class="container">
+    <!-- BEGIN row -->
+    <div class="row justify-content-center">
+        <!-- BEGIN col-10 -->
+        <div class="col-xl-10">
+            <!-- BEGIN row -->
+            <div class="row">
+                <!-- BEGIN col-9 -->
+                <div class="col-xl-9">
+                    @if (Model?.Albums != null)
                     {
-                        <!-- BEGIN gallery -->
-                    <div class="gallery">
-                        <!-- BEGIN gallery-header -->
-                        <div class="d-flex align-items-center mb-3">
-                            <!-- BEGIN gallery-title -->
-                            <div class="gallery-title mb-0">
-                                <a asp-action="Details" asp-route-id="@item?.Id">
-                                    @(item?.AlbumName) <i class="fa fa-chevron-right"></i>
-                                    <small>(@item?.CreationDate)</small>
-                                </a>
-                            </div>
-                            <!-- END gallery-title -->
-                            <!-- BEGIN btn-group -->
-                            <div class="ms-auto btn-group">
-                                <a href="#" class="btn btn-default btn-sm"><i class="fa fa-play"></i></a>
-                                <a asp-action="Delete" asp-route-id="@item?.Id" class="btn btn-default btn-sm"><i class="fa fa-plus"></i></a>
-                                <a asp-action="Delete" asp-route-id="@item?.Id" class="btn btn-default btn-sm"><i class="fas fa-trash-alt"></i></a>
-                            </div>
-                            <!-- END btn-group -->
-                        </div>
-                        <!-- END gallery-header -->
-                        <!-- BEGIN gallery-image -->
-                        @if (item.Pictures != null)
+                        @foreach (var item in Model?.Albums)
                         {
-                            @foreach (var picture in item?.Pictures)
-                            {
-                                <div class="gallery-image">
-                                    <ul class="gallery-image-list">
-                                        <li>
-                                            <a href="@picture?.UriImageAlbum" itemprop="contentUrl" data-size="752x502">
-                                                <img src="@picture?.UriImageAlbum" itemprop="thumbnail" alt="Wedding Image 1" class="img-portrait"/>
-                                            </a>
-                                        </li>
-                                    </ul>
+                            <!-- BEGIN #general -->
+                            <div id="@item.AlbumName" class="mb-5">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h4>@item.AlbumName</h4>
+                                        <p><small>(@item?.CreationDate) - 10 itens</small></p>
+                                    </div>
+                                    <div class="ms-auto btn-group">
+                                        <a class="btn" asp-action="Details" asp-route-id="@item?.Id">
+                                                <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                            }
+
+                                <div class="card">
+                                    <!-- BEGIN gallery -->
+                                    <div class="gallery">
+                                        <!-- BEGIN gallery-image -->
+                                        <div class="gallery-image">
+                                            <ul class="gallery-image-list">
+                                                @foreach (var picture in item.Pictures)
+                                                {
+                                                    <li>
+                                                        <a href="@Html.DisplayFor(modelPicture => picture.UriImageAlbum)" itemprop="contentUrl" data-size="752x502">
+                                                            <img src="@Html.DisplayFor(modelPicture => picture.UriImageAlbum)" itemprop="thumbnail" alt="Wedding Image 1" class="img-portrait" />
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                        <!-- END gallery-image -->
+                                    </div>
+                                    <!-- END gallery -->
+                                </div>
+                            </div>
+                            <!-- END #general -->
                         }
-                        <!-- END gallery-image -->
-                    </div>
-                        <!-- END gallery -->
                     }
-                }
                 </div>
-                <!-- END gallery-content -->
+                <!-- END col-9-->
+                <!-- BEGIN col-3 -->
+                <div class="col-xl-3">
+                    <!-- BEGIN #sidebar-bootstrap -->
+                    <nav id="sidebar-bootstrap" class="navbar navbar-sticky d-none d-xl-block">
+                        <nav class="nav">
+                            <a asp-action="Create" class="nav-link"><h5>Novo álbum</h5></a>
+                            <a class="nav-link" ><h5>Álbuns</h5></a>
+                            @if (Model != null)
+                            {
+                                @foreach (var item in Model?.Albums)
+                                {
+                                    <a class="nav-link" href="#@item.AlbumName" data-bs-toggle="scroll-to">@item.AlbumName</a>
+                                }
+                            }
+                        </nav>
+                    </nav>
+                    <!-- END #sidebar-bootstrap -->
+                </div>
+                <!-- END col-3 -->
             </div>
-            <!-- END scrollbar -->
+            <!-- END row -->
         </div>
-        <!-- END gallery-content-container -->
+        <!-- END col-10 -->
+    </div>
+    <!-- END row -->
 </div>
-<!-- END d-flex -->
+<!-- END container -->

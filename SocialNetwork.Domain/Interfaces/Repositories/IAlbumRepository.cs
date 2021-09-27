@@ -9,11 +9,11 @@ namespace SocialNetwork.Domain.Interfaces.Repositories
 {
     public interface IAlbumRepository
     {
-        Task<IEnumerable<Album>> GetAlbumsByProfileIdAsync(int profileId);
-        Task<IEnumerable<Album>> GetAllAsync();
-        Task<Album> GetByIdAsync(Guid id);
-        Task<Album> CreateAsync(Album album);
-        Task<Album> EditAsync(Album album);
+        Task<IEnumerable<AlbumModel>> GetAlbumsByProfileIdAsync(int profileId);
+        Task<IEnumerable<AlbumModel>> GetAllAsync();
+        Task<AlbumModel> GetByIdAsync(Guid id);
+        Task<AlbumModel> CreateAsync(AlbumModel album);
+        Task<AlbumModel> EditAsync(AlbumModel album);
         Task DeleteAsync(Guid id);
     }
 }

@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SocialNetwork.Data;
 using SocialNetwork.Domain.Entities;
 using SocialNetwork.Domain.Interfaces.Repositories;
+using SocialNetwork.Web.Models;
 
 namespace SocialNetwork.Web.Controllers
 {
@@ -19,50 +25,87 @@ namespace SocialNetwork.Web.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IProfileRepository _profileRepository;
         private readonly IAlbumRepository _albumRepository;
+        private readonly IPictureRepository _pictureRepository;
 
         public AlbumsController(ApplicationDbContext context,
                                 UserManager<User> userManager,
                                 IProfileRepository profileRepository,
-                                IAlbumRepository albumRepository)
+                                IAlbumRepository albumRepository,
+                                IPictureRepository pictureRepository)
         {
             _context = context;
             _userManager = userManager;
             _profileRepository = profileRepository;
             _albumRepository = albumRepository;
+            _pictureRepository = pictureRepository;
         }
 
         // GET: Albums
         public async Task<IActionResult> Index()
         {
-            var currentUserId = _userManager.GetUserId(User);
-            var profile = await _profileRepository.GetProfileByUserIdAsync(currentUserId);
-            
+            var albumIndexViewModel = new AlbumIndexViewModel
+            {
+                Albums = await _albumRepository.GetAllAsync()
+            };
 
-            var albumsByProfile = await _albumRepository.GetAlbumsByProfileIdAsync(profile.Id);
-            //var albumsByProfile = profile.Albums;
-
-            return View(albumsByProfile);
+            return View(albumIndexViewModel);
         }
 
-        // GET: Albums/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        // GET: Albums
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var chosenAlbum = await _albumRepository.GetByIdAsync(id.Value);
             
-            if (chosenAlbum == null)
+            var album = await _albumRepository.GetByIdAsync(id.Value);
+            
+            if (album == null)
             {
                 return NotFound();
             }
 
-            return View(chosenAlbum);
+            return View(album);
         }
 
-        // GET: Albums/Create
+        // POST: Developer/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, AlbumModel albumModel)
+        {
+            if (id != albumModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(albumModel);
+            }
+            
+            try
+            {
+                await _albumRepository.EditAsync(albumModel);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                var exists = await AlbumModelExistsAsync(albumModel.Id);
+
+                if (!exists)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Details), "Albums", new { id });
+        }
         public IActionResult Create()
         {
             return View();
@@ -73,7 +116,7 @@ namespace SocialNetwork.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreationDate,AlbumName,ProfileId")] Album album)
+        public async Task<IActionResult> Create([Bind("Id,CreationDate,AlbumName,ProfileId")] AlbumModel album)
         {
             if (ModelState.IsValid)
             {
@@ -82,61 +125,11 @@ namespace SocialNetwork.Web.Controllers
 
                 album.ProfileId = profile.Id;
                 album.Id = Guid.NewGuid();
+                album.CreationDate = DateTime.Now;
 
                 await _albumRepository.CreateAsync(album);
 
-                return RedirectToAction(nameof(Index));
-            }
-            return View(album);
-        }
-
-        // GET: Albums/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var chosenAlbum = await _albumRepository.GetByIdAsync(id.Value);
-            if (chosenAlbum == null)
-            {
-                return NotFound();
-            }
-            return View(chosenAlbum);
-        }
-
-        // POST: Albums/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,CreationDate,AlbumName,ProfileId")] Album album)
-        {
-            if (id != album.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _albumRepository.EditAsync(album);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    var albumExist = await AlbumExists(album.Id);
-                    if (albumExist)
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create), "Pictures", new {AlbumId = album.Id});
             }
             return View(album);
         }
@@ -169,11 +162,30 @@ namespace SocialNetwork.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> AlbumExists(Guid id)
+        // GET: Albums/Details/5
+        public async Task<IActionResult> Details(Guid? id)
         {
-            var album = await _albumRepository.GetByIdAsync(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            
+            var album = await _context.Albums
+                .Include(u => u.Pictures)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (album == null)
+            {
+                return NotFound();
+            }
 
-            var any = album != null;
+            return View(album);
+        }
+
+        private async Task<bool> AlbumModelExistsAsync(Guid id)
+        {
+            var developer = await _albumRepository.GetByIdAsync(id);
+
+            var any = developer != null;
 
             return any;
         }
