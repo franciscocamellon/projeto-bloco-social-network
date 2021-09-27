@@ -17,27 +17,27 @@ namespace SocialNetwork.Data.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<Picture>> GetPicturesByAlbumIdAsync(Guid albumId)
+        public async Task<IEnumerable<PictureModel>> GetPicturesByAlbumIdAsync(Guid albumId)
         {
             var pictures = _dbContext.Pictures.Where(x => x.AlbumId == albumId);
             return await pictures.ToListAsync();
         }
 
-        public async Task<IEnumerable<Picture>> GetAllAsync()
+        public async Task<IEnumerable<PictureModel>> GetAllAsync()
         {
             var pictures = _dbContext.Pictures.OrderBy(x => x.UploadDate);
 
             return await pictures.ToListAsync();
         }
 
-        public async Task<Picture> GetByIdAsync(Guid id)
+        public async Task<PictureModel> GetByIdAsync(Guid id)
         {
             var picture = await _dbContext.Pictures.FirstOrDefaultAsync(x => x.Id == id);
 
             return picture;
         }
 
-        public async Task<Picture> CreateAsync(Picture picture)
+        public async Task<PictureModel> CreateAsync(PictureModel picture)
         {
             var createdPicture = _dbContext.Pictures.Add(picture);
             await _dbContext.SaveChangesAsync();

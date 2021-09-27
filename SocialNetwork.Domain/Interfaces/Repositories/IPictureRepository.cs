@@ -9,10 +9,10 @@ namespace SocialNetwork.Domain.Interfaces.Repositories
 {
     public interface IPictureRepository
     {
-        Task<IEnumerable<Picture>> GetPicturesByAlbumIdAsync(Guid albumId);
-        Task<IEnumerable<Picture>> GetAllAsync();
-        Task<Picture> GetByIdAsync(Guid id);
-        Task<Picture> CreateAsync(Picture picture);
+        Task<IEnumerable<PictureModel>> GetPicturesByAlbumIdAsync(Guid albumId);
+        Task<IEnumerable<PictureModel>> GetAllAsync();
+        Task<PictureModel> GetByIdAsync(Guid id);
+        Task<PictureModel> CreateAsync(PictureModel picture);
         Task DeleteAsync(Guid id);
     }
 }

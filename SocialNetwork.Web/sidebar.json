@@ -24,9 +24,10 @@
       "area": "",
       "icon": "fa fa-mobile-alt",
       "text": "Aplicativos"
-    },{
-      "controller": "Pictures",
-      "action": "Index",
+    },
+    {
+      "controller": "Albums",
+      "action": "NewIndex",
       "area": "",
       "icon": "fa fa-mobile-alt",
       "text": "Teste fotos"

@@ -41,111 +41,82 @@ namespace SocialNetwork.Web.Controllers
         }
 
         // GET: Albums
-        public async Task<IActionResult> Index(AlbumIndexViewModel albumIndexViewRequest)
+        public async Task<IActionResult> Index()
         {
             var albumIndexViewModel = new AlbumIndexViewModel
             {
                 Albums = await _albumRepository.GetAllAsync()
             };
-            var currentUserId = _userManager.GetUserId(User);
-            var profile = await _profileRepository.GetProfileByUserIdAsync(currentUserId);
-            
-
-            var albumsByProfile = await _albumRepository.GetAlbumsByProfileIdAsync(profile.Id);
-            //var albumsByProfile = profile.Albums;
 
             return View(albumIndexViewModel);
         }
 
-        // GET: Albums/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        // GET: Albums
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var chosenAlbum = await _albumRepository.GetByIdAsync(id.Value);
             
-            if (chosenAlbum == null)
+            var album = await _albumRepository.GetByIdAsync(id.Value);
+            
+            if (album == null)
             {
                 return NotFound();
             }
 
-            return View(chosenAlbum);
+            return View(album);
         }
 
-        // GET: Albums/Create
+        // POST: Developer/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, AlbumModel albumModel)
+        {
+            if (id != albumModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(albumModel);
+            }
+            
+            try
+            {
+                await _albumRepository.EditAsync(albumModel);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                var exists = await AlbumModelExistsAsync(albumModel.Id);
+
+                if (!exists)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Details), "Albums", new { id });
+        }
         public IActionResult Create()
         {
             return View();
         }
-        
-        // GET: Albums/Create
-        public IActionResult CreatePicture()
-        {
-            return View();
-        }
-
-        // POST: Albums/CreatePicture
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> CreatePicture(IFormCollection form,
-        //                                               [FromServices] IHttpClientFactory clientFactory,
-        //                                               Picture picture,
-        //                                               Album album)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        using (var content = new MultipartFormDataContent())
-        //        {
-        //            foreach (var file in form.Files)
-        //            {
-        //                content.Add(CreateFileContent(file.OpenReadStream(), file.FileName, file.ContentType));
-        //            }
-
-        //            var httpClient = clientFactory.CreateClient();
-        //            var response = await httpClient.PostAsync("api/image", content);
-
-        //            response.EnsureSuccessStatusCode();
-        //            var responseResult = await response.Content.ReadAsStringAsync();
-        //            var uriImage = JsonConvert.DeserializeObject<string[]>(responseResult).FirstOrDefault();
-                
-        //            //recuperando user completo do banco de dados
-        //            var currentUserId = _userManager.GetUserId(User);
-
-        //            //obter a entidade perfil do banco
-        //            var profileFromBd = await _profileRepository.GetProfileByUserIdAsync(currentUserId);
-
-        //            if (profileFromBd == null)
-        //            {
-        //                var albumToInsert = new Album();
-        //                albumToInsert.Id = Guid.NewGuid();
-        //                albumToInsert.
-        //            }
-
-        //            var chosenAlbum = await _albumRepository.GetByIdAsync(id.Value);
-        //            profileFromBd.
-        //            album.ProfileId = profile.Id;
-        //            picture.Id = Guid.NewGuid();
-        //            picture.AlbumId = album.Id;
-        //            picture.UploadDate = DateTime.Now;
-        //            picture.UriImageAlbum = uriImage;
-
-        //            await _pictureRepository.CreateAsync(picture);
-
-        //            return RedirectToAction(nameof(Index));
-        //        }
-        //    }
-        //    return View(picture);
-        //}
 
         // POST: Albums/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CreationDate,AlbumName,ProfileId")] Album album)
+        public async Task<IActionResult> Create([Bind("Id,CreationDate,AlbumName,ProfileId")] AlbumModel album)
         {
             if (ModelState.IsValid)
             {
@@ -154,61 +125,11 @@ namespace SocialNetwork.Web.Controllers
 
                 album.ProfileId = profile.Id;
                 album.Id = Guid.NewGuid();
+                album.CreationDate = DateTime.Now;
 
                 await _albumRepository.CreateAsync(album);
 
-                return RedirectToAction(nameof(Index));
-            }
-            return View(album);
-        }
-
-        // GET: Albums/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var chosenAlbum = await _albumRepository.GetByIdAsync(id.Value);
-            if (chosenAlbum == null)
-            {
-                return NotFound();
-            }
-            return View(chosenAlbum);
-        }
-
-        // POST: Albums/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,CreationDate,AlbumName,ProfileId")] Album album)
-        {
-            if (id != album.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _albumRepository.EditAsync(album);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    var albumExist = await AlbumExists(album.Id);
-                    if (albumExist)
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create), "Pictures", new {AlbumId = album.Id});
             }
             return View(album);
         }
@@ -241,26 +162,32 @@ namespace SocialNetwork.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> AlbumExists(Guid id)
+        // GET: Albums/Details/5
+        public async Task<IActionResult> Details(Guid? id)
         {
-            var album = await _albumRepository.GetByIdAsync(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            
+            var album = await _context.Albums
+                .Include(u => u.Pictures)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (album == null)
+            {
+                return NotFound();
+            }
 
-            var any = album != null;
-
-            return any;
+            return View(album);
         }
 
-        private StreamContent CreateFileContent(Stream stream, string fileName, string contentType)
+        private async Task<bool> AlbumModelExistsAsync(Guid id)
         {
-            var fileContent = new StreamContent(stream);
-            fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
-            {
-                Name = "\"files\"",
-                FileName = "\"" + fileName + "\""
-            };
+            var developer = await _albumRepository.GetByIdAsync(id);
 
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-            return fileContent;
+            var any = developer != null;
+
+            return any;
         }
     }
 }

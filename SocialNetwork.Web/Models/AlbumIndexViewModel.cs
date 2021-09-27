@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,13 @@ using SocialNetwork.Web.Controllers;
 
 namespace SocialNetwork.Web.Models
 {
-    public class AlbumIndexViewModel
+    public class AlbumIndexViewModel : IEnumerable
     {
-        public IEnumerable<Album> Albums { get; set; }
-        public IEnumerable<Picture> Pictures { get; set; }
+        public IEnumerable<AlbumModel> Albums { get; set; }
+        public IEnumerator GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
     

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using SocialNetwork.Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using SocialNetwork.Web.Models;
 
 namespace SocialNetwork.Web.Controllers
 {
@@ -67,9 +68,10 @@ namespace SocialNetwork.Web.Controllers
         }
 
         // GET: UserPictures/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(Guid id)
         {
-            ViewData["AlbumId"] = new SelectList(_context.Albums, "Id", "Id");
+            await FillWithAlbumId(id);
+
             return View();
         }
 
@@ -80,86 +82,21 @@ namespace SocialNetwork.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection form,
                                                 [FromServices] IHttpClientFactory clientFactory,
-                                                [Bind("Id,UploadDate,UriImageAlbum,AlbumId")] Picture picture,
-                                                Album album)
+                                                [Bind("Id,UploadDate,UriImageAlbum,AlbumId")] PictureModel picture)
         {
-           
-            using (var content = new MultipartFormDataContent())
+            var imageUriList = await GetImageUriFromApi(form, clientFactory);
+
+            foreach (var imageUri in imageUriList)
             {
-                foreach (var file in form.Files)
-                {
-                    content.Add(CreateFileContent(file.OpenReadStream(), file.FileName, file.ContentType));
-                }
-
-                var httpClient = clientFactory.CreateClient();
-                var response = await httpClient.PostAsync("api/image", content);
-
-                response.EnsureSuccessStatusCode();
-                var responseResult = await response.Content.ReadAsStringAsync();
-                var uriImage = JsonConvert.DeserializeObject<string[]>(responseResult).FirstOrDefault();
-
-                //picture.AlbumId = album.Id;
                 picture.Id = Guid.NewGuid();
-                picture.UriImageAlbum = uriImage;
                 picture.UploadDate = DateTime.Now;
+                picture.UriImageAlbum = imageUri;
 
                 await  _pictureRepository.CreateAsync(picture);
-
-                return RedirectToAction(nameof(Index));
             }
-        }
-
-        // GET: UserPictures/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var userPicture = await _context.Pictures.FindAsync(id);
-            if (userPicture == null)
-            {
-                return NotFound();
-            }
-            ViewData["AlbumId"] = new SelectList(_context.Albums, "Id", "Id", userPicture.AlbumId);
-            return View(userPicture);
-        }
-
-        // POST: UserPictures/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UploadDate,UriImageAlbum,AlbumId")] Picture userPicture)
-        {
-            if (id != userPicture.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(userPicture);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserPictureExists(userPicture.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AlbumId"] = new SelectList(_context.Albums, "Id", "Id", userPicture.AlbumId);
-            return View(userPicture);
+            
+            return RedirectToAction(nameof(Index), "Albums");
+            
         }
 
         // GET: UserPictures/Delete/5
@@ -197,6 +134,27 @@ namespace SocialNetwork.Web.Controllers
             return _context.Pictures.Any(e => e.Id == id);
         }
 
+        private async Task<IEnumerable<string>> GetImageUriFromApi(IFormCollection form,
+                                                                   [FromServices] IHttpClientFactory clientFactory)
+        {
+            using (var content = new MultipartFormDataContent())
+            {
+                foreach (var file in form.Files)
+                {
+                    content.Add(CreateFileContent(file.OpenReadStream(), file.FileName, file.ContentType));
+                }
+
+                var httpClient = clientFactory.CreateClient();
+                var response = await httpClient.PostAsync("api/image", content);
+
+                response.EnsureSuccessStatusCode();
+                var responseResult = await response.Content.ReadAsStringAsync();
+                var uriImage = JsonConvert.DeserializeObject<string[]>(responseResult);
+
+                return uriImage;
+            }
+        }
+
         private StreamContent CreateFileContent(Stream stream, string fileName, string contentType)
         {
             var fileContent = new StreamContent(stream);
@@ -208,6 +166,17 @@ namespace SocialNetwork.Web.Controllers
 
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             return fileContent;
+        }
+
+        private async Task FillWithAlbumId(Guid? albumId = null)
+        {
+            var albuns = await _albumRepository.GetAllAsync();
+
+            ViewBag.Albuns = new SelectList(
+                albuns,
+                nameof(AlbumModel.Id),
+                nameof(AlbumModel.AlbumName),
+                albumId);
         }
     }
 }

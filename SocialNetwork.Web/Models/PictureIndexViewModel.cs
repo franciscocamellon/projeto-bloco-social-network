@@ -9,6 +9,6 @@ namespace SocialNetwork.Web.Models
 {
     public class PictureIndexViewModel
     {
-        public IEnumerable<Picture> Pictures { get; set; }
+        public IEnumerable<PictureViewModel> Pictures { get; set; }
     }
 }
