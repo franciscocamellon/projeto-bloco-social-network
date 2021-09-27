@@ -1,10 +1,13 @@
-﻿@model IEnumerable<SocialNetwork.Domain.Entities.Album>
+@using static SocialNetwork.Domain.Entities.Picture
+@model IEnumerable<SocialNetwork.Domain.Entities.Album>
 
 @{
     ViewData["Title"] = "Gallery";
     ViewData["AppClass"] = "app-content-full-height";
     ViewData["AppContentClass"] = "p-0";
     ViewData["HtmlAttribute"] = "itemscope itemtype='http://schema.org/WebPage'";
+
+    var pictures = Model;
 }
 
 @section Styles {
@@ -94,35 +97,44 @@
                     @foreach (var item in Model)
                     {
                         <!-- BEGIN gallery -->
-                        <div class="gallery">
-                            <!-- BEGIN gallery-header -->
-                            <div class="d-flex align-items-center mb-3">
-                                <!-- BEGIN gallery-title -->
-                                <div class="gallery-title mb-0">
-                                    <a asp-action="Details" asp-route-id="@item?.Id">
-                                        @(item?.AlbumName) <i class="fa fa-chevron-right"></i>
-                                        <small>(@item?.CreationDate)</small>
-                                    </a>
-                                </div>
-                                <!-- END gallery-title -->
-                                <!-- BEGIN btn-group -->
-                                <div class="ms-auto btn-group">
-                                    <a href="#" class="btn btn-default btn-sm"><i class="fa fa-play"></i></a>
-                                    <a href="#" class="btn btn-default btn-sm"><i class="fa fa-plus"></i></a>
-                                    <a asp-action="Delete" asp-route-id="@item?.Id" class="btn btn-default btn-sm"><i class="fas fa-trash-alt"></i></a>
-                                </div>
-                                <!-- END btn-group -->
+                    <div class="gallery">
+                        <!-- BEGIN gallery-header -->
+                        <div class="d-flex align-items-center mb-3">
+                            <!-- BEGIN gallery-title -->
+                            <div class="gallery-title mb-0">
+                                <a asp-action="Details" asp-route-id="@item?.Id">
+                                    @(item?.AlbumName) <i class="fa fa-chevron-right"></i>
+                                    <small>(@item?.CreationDate)</small>
+                                </a>
                             </div>
-                            <!-- END gallery-header -->
-                            <!-- BEGIN gallery-image -->
-                            <div class="gallery-image">
-                                <ul class="gallery-image-list">
-                                    <li><a href="/img/gallery/gallery-42.jpg" itemprop="contentUrl" data-size="752x502"><img src="/img/gallery/gallery-42.jpg" itemprop="thumbnail" alt="Wedding Image 1" class="img-portrait"/></a></li>
-
-                                </ul>
+                            <!-- END gallery-title -->
+                            <!-- BEGIN btn-group -->
+                            <div class="ms-auto btn-group">
+                                <a href="#" class="btn btn-default btn-sm"><i class="fa fa-play"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item?.Id" class="btn btn-default btn-sm"><i class="fa fa-plus"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item?.Id" class="btn btn-default btn-sm"><i class="fas fa-trash-alt"></i></a>
                             </div>
-                            <!-- END gallery-image -->
+                            <!-- END btn-group -->
                         </div>
+                        <!-- END gallery-header -->
+                        <!-- BEGIN gallery-image -->
+                        @if (item.Pictures != null)
+                        {
+                            @foreach (var picture in item?.Pictures)
+                            {
+                                <div class="gallery-image">
+                                    <ul class="gallery-image-list">
+                                        <li>
+                                            <a href="@picture?.UriImageAlbum" itemprop="contentUrl" data-size="752x502">
+                                                <img src="@picture?.UriImageAlbum" itemprop="thumbnail" alt="Wedding Image 1" class="img-portrait"/>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                        }
+                        <!-- END gallery-image -->
+                    </div>
                         <!-- END gallery -->
                     }
                 }
